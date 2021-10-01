@@ -18,25 +18,27 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+// Lombok
 @Getter
 @Setter
 @ToString(exclude = {"data", "quantidade", "tipo"})
 @AllArgsConstructor
 @NoArgsConstructor
+
+// Jpa
 @Entity
 @Table(name = "transacoes")
 public class Transacao {
-	@Id
+
+	@Id 
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private Long id;	
 	private String ticker;
-	private  BigDecimal preco;
-	private Integer quantidade;
 	private LocalDate data;
-	
+	private BigDecimal preco;
+	private Integer quantidade;
 	@Enumerated(EnumType.STRING)
-	private TipoTransacao tipo;
-	
+	private TipoTransacao tipo;	
 	@ManyToOne
 	private Usuario usuario;
 }
