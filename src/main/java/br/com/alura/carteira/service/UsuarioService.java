@@ -6,6 +6,8 @@ import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import br.com.alura.carteira.dto.UsuarioDto;
 import br.com.alura.carteira.dto.UsuarioFormDto;
 import br.com.alura.carteira.modelo.Usuario;
@@ -23,6 +25,7 @@ public class UsuarioService {
 		return usuarios.stream().map(u -> modelMapper.map(u, UsuarioDto.class)).collect(Collectors.toList());	
 	}
 	
+	@Transactional
 	public void cadastrar(UsuarioFormDto dto) {
 		Usuario usuario = modelMapper.map(dto, Usuario.class);
 		

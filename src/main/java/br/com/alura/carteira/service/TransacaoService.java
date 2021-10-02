@@ -5,6 +5,8 @@ import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import br.com.alura.carteira.dto.TransacaoDto;
 import br.com.alura.carteira.dto.TransacaoFormDto;
 import br.com.alura.carteira.modelo.Transacao;
@@ -21,8 +23,11 @@ public class TransacaoService {
 		return transacoes.stream().map(t -> modelMapper.map(t, TransacaoDto.class)).collect(Collectors.toList());
 	}
 
+	@Transactional
 	public void cadastrar(TransacaoFormDto dto) {
 		Transacao transacao = modelMapper.map(dto, Transacao.class);
+		transacao.setId(null); // zera o id da transação gerado indevidamente pelo ModelMapper
+		
 		transacaoRepository.save(transacao);
 	}
 }
