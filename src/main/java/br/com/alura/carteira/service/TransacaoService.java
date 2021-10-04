@@ -4,7 +4,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,10 +24,11 @@ public class TransacaoService {
 		return transacoes.map(t -> modelMapper.map(t, TransacaoDto.class));
 	}
 
-	@Transactional  // Solicita commit da operação
+	@Transactional              // Solicita commit após execução do metodo
 	public void cadastrar(TransacaoFormDto dto) {
 		Transacao transacao = modelMapper.map(dto, Transacao.class);
-		transacao.setId(null); // zera o id da transação gerado indevidamente pelo ModelMapper
+		transacao.setId(null);  // Zera o id da transação gerado indevidamente 
+								// pelo ModelMapper
 		
 		transacaoRepository.save(transacao);
 	}

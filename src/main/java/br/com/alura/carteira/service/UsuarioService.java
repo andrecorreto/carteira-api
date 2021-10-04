@@ -26,7 +26,7 @@ public class UsuarioService {
 		return usuarios.map(u -> modelMapper.map(u, UsuarioDto.class));	
 	}
 	
-	@Transactional // solicita commit da operação
+	@Transactional // solicita commit após execução do metodo
 	public void cadastrar(UsuarioFormDto dto) {
 		Usuario usuario = modelMapper.map(dto, Usuario.class);
 		
