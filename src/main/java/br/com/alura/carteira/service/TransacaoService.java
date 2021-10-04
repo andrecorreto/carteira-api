@@ -25,11 +25,12 @@ public class TransacaoService {
 	}
 
 	@Transactional              // Solicita commit após execução do metodo
-	public void cadastrar(TransacaoFormDto dto) {
+	public TransacaoDto cadastrar(TransacaoFormDto dto) {
 		Transacao transacao = modelMapper.map(dto, Transacao.class);
 		transacao.setId(null);  // Zera o id da transação gerado indevidamente 
 								// pelo ModelMapper
 		
 		transacaoRepository.save(transacao);
+		return modelMapper.map(transacao, TransacaoDto.class);
 	}
 }
