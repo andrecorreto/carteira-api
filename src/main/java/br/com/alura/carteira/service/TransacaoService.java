@@ -10,27 +10,38 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.alura.carteira.dto.TransacaoDto;
 import br.com.alura.carteira.dto.TransacaoFormDto;
 import br.com.alura.carteira.modelo.Transacao;
+import br.com.alura.carteira.modelo.Usuario;
 import br.com.alura.carteira.repository.TransacaoRepository;
+import br.com.alura.carteira.repository.UsuarioRepository;
 
 @Service
 public class TransacaoService {
 	
 	@Autowired
-	private TransacaoRepository transacaoRepository;	
+	private TransacaoRepository transacaoRepository;
+
+	@Autowired
+	private UsuarioRepository usuarioRepository;
+	
 	private ModelMapper modelMapper = new ModelMapper();
 
 	public Page<TransacaoDto> listar(Pageable paginacao) {
-		Page<Transacao> transacoes = transacaoRepository.findAll(paginacao);
-		return transacoes.map(t -> modelMapper.map(t, TransacaoDto.class));
+		return transacaoRepository
+				.findAll(paginacao)
+				.map(t -> modelMapper.map(t, TransacaoDto.class));
 	}
 
-	@Transactional              // Solicita commit após execução do metodo
+	@Transactional
 	public TransacaoDto cadastrar(TransacaoFormDto dto) {
-		Transacao transacao = modelMapper.map(dto, Transacao.class);
-		transacao.setId(null);  // Zera o id da transação gerado indevidamente 
-								// pelo ModelMapper
+		Long idUsuario = dto.getUsuarioId();
+		Usuario usuario = usuarioRepository.getById(idUsuario);
 		
+		Transacao transacao = modelMapper.map(dto, Transacao.class);
+		transacao.setId(null);   
+		transacao.setUsuario(usuario);
+
 		transacaoRepository.save(transacao);
+		
 		return modelMapper.map(transacao, TransacaoDto.class);
 	}
 }
