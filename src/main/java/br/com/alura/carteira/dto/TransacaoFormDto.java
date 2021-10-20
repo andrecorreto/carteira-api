@@ -13,11 +13,15 @@ import javax.validation.constraints.Size;
 import com.fasterxml.jackson.annotation.JsonAlias;
 
 import br.com.alura.carteira.modelo.TipoTransacao;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class TransacaoFormDto {
 
 	@NotBlank
@@ -30,11 +34,11 @@ public class TransacaoFormDto {
 	private BigDecimal preco;
 
 	@NotNull
-	private int quantidade;
-
-	@NotNull
 	@PastOrPresent
 	private LocalDate data;
+	
+	@NotNull
+	private int quantidade;
 
 	@NotNull
 	private TipoTransacao tipo;
