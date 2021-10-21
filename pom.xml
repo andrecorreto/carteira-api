@@ -59,7 +59,11 @@
 		    <groupId>org.flywaydb</groupId>
 		    <artifactId>flyway-core</artifactId>
 		</dependency>
-		
+<!--        Ativa banco de dados em memoria para testes automatizados -->		
+<!-- 		<dependency> -->
+<!--    			 <groupId>com.h2database</groupId> -->
+<!--    			 <artifactId>h2</artifactId> -->
+<!-- 		</dependency> -->
 		
 	</dependencies>
 
