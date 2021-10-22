@@ -9,6 +9,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.alura.carteira.dto.AtualizacaoTransacaoFormDto;
+import br.com.alura.carteira.dto.DetalhesTransacaoDto;
 import br.com.alura.carteira.dto.TransacaoDto;
 import br.com.alura.carteira.dto.TransacaoFormDto;
 import br.com.alura.carteira.modelo.Transacao;
@@ -48,4 +50,32 @@ public class TransacaoService {
 			throw new IllegalArgumentException("Usuario inexistente!");
 		}
 	}
+
+	@Transactional
+	public TransacaoDto atualizar(AtualizacaoTransacaoFormDto dto) {
+		Transacao transacao = transacaoRepository.getById(dto.getId());
+		
+		transacao.atualizarInformacoes(
+				dto.getTicker(), 
+				dto.getData(), 
+				dto.getPreco(), 
+				dto.getQuantidade(), 
+				dto.getTipo());
+
+		return modelMapper.map(transacao, TransacaoDto.class);
+	}
+
+	@Transactional
+	public void remover(Long id) {
+		transacaoRepository.deleteById(id);	
+	}
+
+	public DetalhesTransacaoDto detalhar(Long id) {
+		Transacao transacao = transacaoRepository
+				.findById(id)
+				.orElseThrow(() -> new EntityNotFoundException());
+		
+		return modelMapper.map(transacao, DetalhesTransacaoDto.class);
+	}
+
 }
