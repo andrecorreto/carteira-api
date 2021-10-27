@@ -23,11 +23,10 @@ public class TransacaoService {
 	
 	@Autowired
 	private TransacaoRepository transacaoRepository;
-
 	@Autowired
-	private UsuarioRepository usuarioRepository;
-	
-	private ModelMapper modelMapper = new ModelMapper();
+	private UsuarioRepository usuarioRepository;	
+	@Autowired
+	private ModelMapper modelMapper;
 
 	public Page<TransacaoDto> listar(Pageable paginacao) {
 		return transacaoRepository
