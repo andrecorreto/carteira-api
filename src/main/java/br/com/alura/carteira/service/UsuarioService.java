@@ -35,7 +35,7 @@ public class UsuarioService {
 		Usuario usuario = modelMapper.map(dto, Usuario.class);
 		
 		String senha = new Random().nextInt(999999) + "";
-		
+		System.out.println(usuario + "senha = " + senha );
 		usuario.setSenha(bCryptPasswordEncoder.encode(senha));
 		
 		usuarioRepository.save(usuario);
