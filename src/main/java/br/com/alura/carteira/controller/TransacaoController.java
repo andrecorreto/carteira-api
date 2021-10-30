@@ -26,15 +26,19 @@ import br.com.alura.carteira.dto.DetalhesTransacaoDto;
 import br.com.alura.carteira.dto.TransacaoDto;
 import br.com.alura.carteira.dto.TransacaoFormDto;
 import br.com.alura.carteira.service.TransacaoService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping("/transacoes")
+@Api(tags = "Transações")
 public class TransacaoController {
 	
 	@Autowired
 	private TransacaoService service;
 	
 	@GetMapping
+	@ApiOperation("Listar transações")
 	public Page<TransacaoDto> listar(@PageableDefault(size = 10) Pageable paginacao) {
 		return service.listar(paginacao);
 	}	
