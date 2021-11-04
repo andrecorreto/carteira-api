@@ -31,7 +31,7 @@ import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping("/transacoes")
-@Api(tags = "Transações")
+@Api(tags = "Transação")
 public class TransacaoController {
 	
 	@Autowired

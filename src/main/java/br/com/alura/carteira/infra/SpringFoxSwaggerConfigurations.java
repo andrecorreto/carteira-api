@@ -27,7 +27,7 @@ public class SpringFoxSwaggerConfigurations {
 		          .globalRequestParameters(Arrays.asList(
 		        		  new RequestParameterBuilder()
 		        		  .name("Authorization")
-		        		  .description("Bearer Token")
+		        		  .description("Bearer token")
 		        		  .required(false)
 		        		  .in("header")
 		        		  .build()))

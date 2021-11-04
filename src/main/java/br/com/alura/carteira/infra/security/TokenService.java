@@ -17,7 +17,6 @@ public class TokenService {
 	
 	public String gerarToken(Authentication authentication) {
 		Usuario logado = (Usuario) authentication.getPrincipal();
-		
 		return Jwts
 				.builder()
 				.setSubject(logado.getId().toString())
@@ -38,7 +37,7 @@ public class TokenService {
 	}
 
 	public Long extrairIdUsuario(String token) {
-		Claims claims =Jwts
+		Claims claims = Jwts
 				.parser()
 				.setSigningKey(secret)
 				.parseClaimsJws(token)
