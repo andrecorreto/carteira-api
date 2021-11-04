@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,6 +26,7 @@ import br.com.alura.carteira.dto.AtualizacaoTransacaoFormDto;
 import br.com.alura.carteira.dto.DetalhesTransacaoDto;
 import br.com.alura.carteira.dto.TransacaoDto;
 import br.com.alura.carteira.dto.TransacaoFormDto;
+import br.com.alura.carteira.modelo.Usuario;
 import br.com.alura.carteira.service.TransacaoService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -39,14 +41,19 @@ public class TransacaoController {
 	
 	@GetMapping
 	@ApiOperation("Listar transações")
-	public Page<TransacaoDto> listar(@PageableDefault(size = 10) Pageable paginacao) {
-		return service.listar(paginacao);
+	public Page<TransacaoDto> listar(
+			@PageableDefault(size = 10) Pageable paginacao, 
+			@AuthenticationPrincipal Usuario logado) {
+		return service.listar(paginacao, logado);
 	}	
 	
 	@PostMapping
-	public ResponseEntity<TransacaoDto> cadastrar(@RequestBody @Valid 
-			TransacaoFormDto dto, UriComponentsBuilder uriBuilder) {
-		TransacaoDto transacaoDto = service.cadastrar(dto);
+	public ResponseEntity<TransacaoDto> cadastrar(
+			@RequestBody @Valid TransacaoFormDto dto, 
+			UriComponentsBuilder uriBuilder,
+			@AuthenticationPrincipal Usuario logado) {
+		
+		TransacaoDto transacaoDto = service.cadastrar(dto, logado);
 		
 		URI uri = uriBuilder
 				.path("/transacoes/{id}")
@@ -56,21 +63,26 @@ public class TransacaoController {
 	}
 	
 	@PutMapping
-	public ResponseEntity<TransacaoDto> atualizar(@RequestBody @Valid 
-			AtualizacaoTransacaoFormDto dto) {
-		TransacaoDto atualizada = service.atualizar(dto);		
+	public ResponseEntity<TransacaoDto> atualizar(
+			@RequestBody @Valid AtualizacaoTransacaoFormDto dto,
+			@AuthenticationPrincipal Usuario logado) {
+		TransacaoDto atualizada = service.atualizar(dto, logado);		
 		return ResponseEntity.ok(atualizada);
 	}
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<TransacaoDto> remover(@PathVariable @NotNull Long id) {
-		service.remover(id);		
+	public ResponseEntity<TransacaoDto> remover(
+			@PathVariable @NotNull Long id,
+			@AuthenticationPrincipal Usuario logado) {
+		service.remover(id, logado);		
 		return ResponseEntity.noContent().build();
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<DetalhesTransacaoDto> detalhar(@PathVariable @NotNull Long id) {
-		DetalhesTransacaoDto dto = service.detalhar(id);		
+	public ResponseEntity<DetalhesTransacaoDto> detalhar(
+			@PathVariable @NotNull Long id,
+			@AuthenticationPrincipal Usuario logado) {
+		DetalhesTransacaoDto dto = service.detalhar(id, logado);		
 		return ResponseEntity.ok(dto);
 	}
 	

@@ -18,6 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import br.com.alura.carteira.dto.TransacaoDto;
 import br.com.alura.carteira.dto.TransacaoFormDto;
 import br.com.alura.carteira.modelo.TipoTransacao;
+import br.com.alura.carteira.modelo.Usuario;
 import br.com.alura.carteira.repository.TransacaoRepository;
 import br.com.alura.carteira.repository.UsuarioRepository;
 
@@ -48,8 +49,9 @@ class TransacaoServiceTest {
 	@Test
 	void deveriaCadastrarUmaTransacao() {
 		TransacaoFormDto formDto = criarTransacaoFormDto();
+		Usuario logado = usuarioRepository.getById(formDto.getUsuarioId());
 				
-		TransacaoDto dto = transacaoService.cadastrar(formDto);
+		TransacaoDto dto = transacaoService.cadastrar(formDto, logado);
 		
 		Mockito.verify(transacaoRepository).save(Mockito.any());
 	
@@ -67,7 +69,7 @@ class TransacaoServiceTest {
 		.when(usuarioRepository.getById(formDto.getUsuarioId()))
 		.thenThrow(EntityNotFoundException.class);
 		
-		assertThrows(IllegalArgumentException.class, () -> transacaoService.cadastrar(formDto));
+		assertThrows(IllegalArgumentException.class, () -> transacaoService.cadastrar(formDto, usuarioRepository.getById(formDto.getUsuarioId())));
 	}
 	
 }
