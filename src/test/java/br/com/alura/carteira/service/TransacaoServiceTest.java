@@ -8,16 +8,19 @@ import java.time.LocalDate;
 
 import javax.persistence.EntityNotFoundException;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.modelmapper.ModelMapper;
 
 import br.com.alura.carteira.dto.TransacaoDto;
 import br.com.alura.carteira.dto.TransacaoFormDto;
 import br.com.alura.carteira.modelo.TipoTransacao;
+import br.com.alura.carteira.modelo.Transacao;
 import br.com.alura.carteira.modelo.Usuario;
 import br.com.alura.carteira.repository.TransacaoRepository;
 import br.com.alura.carteira.repository.UsuarioRepository;
@@ -30,9 +33,18 @@ class TransacaoServiceTest {
 
 	@Mock
 	private UsuarioRepository usuarioRepository;
+	
+	@Mock
+	private ModelMapper modelMapper;
 
 	@InjectMocks
 	private TransacaoService transacaoService;
+	
+	private Usuario logado;	
+	@BeforeEach
+	public void antes() {
+		this.logado = new Usuario("Rodrigo", "rodrigo@email.com", "123456");
+	}
 	
 	private TransacaoFormDto criarTransacaoFormDto() {
 		TransacaoFormDto formDto = new TransacaoFormDto(
@@ -49,8 +61,32 @@ class TransacaoServiceTest {
 	@Test
 	void deveriaCadastrarUmaTransacao() {
 		TransacaoFormDto formDto = criarTransacaoFormDto();
-		Usuario logado = usuarioRepository.getById(formDto.getUsuarioId());
-				
+		
+		Mockito
+		.when(usuarioRepository.getById(formDto.getUsuarioId()))
+		.thenReturn(logado);
+		
+		Transacao transacao = new Transacao(formDto.getTicker(),
+				formDto.getData(),
+				formDto.getPreco(),
+				formDto.getQuantidade(),
+				formDto.getTipo(),
+				logado);
+		Mockito
+		.when(modelMapper.map(formDto, Transacao.class))
+		.thenReturn(transacao);
+		
+		Mockito
+		.when(modelMapper.map(transacao, TransacaoDto.class))
+		.thenReturn(new TransacaoDto(
+				null,
+				transacao.getTicker(),
+				transacao.getPreco(),
+				transacao.getQuantidade(),
+				transacao.getTipo(),
+				transacao.getUsuario().getNome()
+				));
+		
 		TransacaoDto dto = transacaoService.cadastrar(formDto, logado);
 		
 		Mockito.verify(transacaoRepository).save(Mockito.any());
@@ -69,7 +105,7 @@ class TransacaoServiceTest {
 		.when(usuarioRepository.getById(formDto.getUsuarioId()))
 		.thenThrow(EntityNotFoundException.class);
 		
-		assertThrows(IllegalArgumentException.class, () -> transacaoService.cadastrar(formDto, usuarioRepository.getById(formDto.getUsuarioId())));
+		assertThrows(IllegalArgumentException.class, () -> transacaoService.cadastrar(formDto, logado));
 	}
 	
 }
