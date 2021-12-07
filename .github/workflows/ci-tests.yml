@@ -53,5 +53,5 @@ jobs:
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: "carteira-api-andre"
-          heroku_email: "r.caneppele@gmail.com"
+          heroku_email: "andrecorreto@msn.com"
           usedocker: true
